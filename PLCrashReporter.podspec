@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
-  s.name             = 'PLCrashReporter'
-  s.version          = '1.3.0.2'
+  s.name             = 'PLCrashReporter-Zonal'
+  s.version          = '0.0.1'
   s.summary          = 'Reliable, open-source crash reporting for iOS and Mac OS X.'
 
   s.description      = <<-DESC
