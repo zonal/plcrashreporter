@@ -319,6 +319,9 @@ static kern_return_t mach_exception_callback (task_t task, thread_t thread, exce
 }
 #endif /* PLCRASH_FEATURE_MACH_EXCEPTIONS */
 
+NSString *const kPLCrashReporterCallbackExceptionKey   = @"kPLCrashReporterCallbackExceptionKey";
+NSString *const kPLCrashReporterCallbackExceptionIDKey = @"kPLCrashReporterCallbackExceptionIDKey";
+
 /**
  * @internal
  *
@@ -332,6 +335,16 @@ static kern_return_t mach_exception_callback (task_t task, thread_t thread, exce
 static void uncaught_exception_handler (NSException *exception) {
     /* Set the uncaught exception */
     plcrash_log_writer_set_exception(&signal_handler_context.writer, exception);
+
+    if (crashCallbacks.handleSignal != NULL)
+    {
+        uuid_string_t parsedString = {};
+        uuid_unparse_upper(((void *)&signal_handler_context.writer.report_info.uuid_bytes), parsedString);
+        NSString *uuid = [NSString stringWithUTF8String:parsedString];
+
+        //Trigger the callback
+        crashCallbacks.handleSignal(NULL, NULL, @{kPLCrashReporterCallbackExceptionIDKey : uuid, kPLCrashReporterCallbackExceptionKey: [[exception copy] autorelease]});
+    }
 
     /* Synchronously trigger the crash handler */
     abort();
@@ -846,7 +859,7 @@ cleanup:
     /* Check for programmer error; this should not be called after the signal handler is enabled as to ensure that
      * the signal handler can never fire with a partially initialized callback structure. */
     if (_enabled)
-        [NSException raise: PLCrashReporterException format: @"The crash reporter has alread been enabled"];
+        [NSException raise: PLCrashReporterException format: @"The crash reporter has already been enabled"];
 
     assert(callbacks->version == 0);
 

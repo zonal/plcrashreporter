@@ -50,6 +50,9 @@
  */
 typedef void (*PLCrashReporterPostCrashSignalCallback)(siginfo_t *info, ucontext_t *uap, void *context);
 
+extern NSString *const kPLCrashReporterCallbackExceptionKey;
+extern NSString *const kPLCrashReporterCallbackExceptionIDKey;
+
 /**
  * @ingroup types
  *

@@ -49,10 +49,6 @@
 #import "PLCrashSysctl.h"
 #import "PLCrashProcessInfo.h"
 
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h> // For UIDevice
-#endif
-
 /**
  * @internal
  * Maximum number of frames that will be written to the crash report for a single thread. Used as a safety measure
@@ -85,13 +81,13 @@ enum {
 
     /** CrashReport.app_info */
     PLCRASH_PROTO_APP_INFO_ID = 2,
-    
+
     /** CrashReport.app_info.app_identifier */
     PLCRASH_PROTO_APP_INFO_APP_IDENTIFIER_ID = 1,
-    
+
     /** CrashReport.app_info.app_version */
     PLCRASH_PROTO_APP_INFO_APP_VERSION_ID = 2,
-    
+
     /** CrashReport.app_info.app_marketing_version */
     PLCRASH_PROTO_APP_INFO_APP_MARKETING_VERSION_ID = 3,
 
@@ -101,14 +97,14 @@ enum {
 
     /** CrashReport.symbol.start_address */
     PLCRASH_PROTO_SYMBOL_START_ADDRESS = 2,
-    
+
     /** CrashReport.symbol.end_address */
     PLCRASH_PROTO_SYMBOL_END_ADDRESS = 3,
 
 
     /** CrashReport.threads */
     PLCRASH_PROTO_THREADS_ID = 3,
-    
+
 
     /** CrashReports.thread.thread_number */
     PLCRASH_PROTO_THREAD_THREAD_NUMBER_ID = 1,
@@ -122,7 +118,7 @@ enum {
 
     /** CrashReport.thread.frame.pc */
     PLCRASH_PROTO_THREAD_FRAME_PC_ID = 3,
-    
+
     /** CrashReport.thread.frame.symbol */
     PLCRASH_PROTO_THREAD_FRAME_SYMBOL_ID = 6,
 
@@ -148,23 +144,23 @@ enum {
 
     /** CrashReport.BinaryImage.name */
     PLCRASH_PROTO_BINARY_IMAGE_NAME_ID = 3,
-    
+
     /** CrashReport.BinaryImage.uuid */
     PLCRASH_PROTO_BINARY_IMAGE_UUID_ID = 4,
 
     /** CrashReport.BinaryImage.code_type */
     PLCRASH_PROTO_BINARY_IMAGE_CODE_TYPE_ID = 5,
 
-    
+
     /** CrashReport.exception */
     PLCRASH_PROTO_EXCEPTION_ID = 5,
 
     /** CrashReport.exception.name */
     PLCRASH_PROTO_EXCEPTION_NAME_ID = 1,
-    
+
     /** CrashReport.exception.reason */
     PLCRASH_PROTO_EXCEPTION_REASON_ID = 2,
-    
+
     /** CrashReports.exception.frames */
     PLCRASH_PROTO_EXCEPTION_FRAMES_ID = 3,
 
@@ -177,52 +173,52 @@ enum {
 
     /** CrashReport.signal.code */
     PLCRASH_PROTO_SIGNAL_CODE_ID = 2,
-    
+
     /** CrashReport.signal.address */
     PLCRASH_PROTO_SIGNAL_ADDRESS_ID = 3,
-    
+
     /** CrashReport.signal.mach_exception */
     PLCRASH_PROTO_SIGNAL_MACH_EXCEPTION_ID = 4,
-    
-    
+
+
     /** CrashReport.signal.mach_exception.type */
     PLCRASH_PROTO_SIGNAL_MACH_EXCEPTION_TYPE_ID = 1,
-    
+
     /** CrashReport.signal.mach_exception.codes */
     PLCRASH_PROTO_SIGNAL_MACH_EXCEPTION_CODES_ID = 2,
 
 
     /** CrashReport.process_info */
     PLCRASH_PROTO_PROCESS_INFO_ID = 7,
-    
+
     /** CrashReport.process_info.process_name */
     PLCRASH_PROTO_PROCESS_INFO_PROCESS_NAME_ID = 1,
-    
+
     /** CrashReport.process_info.process_id */
     PLCRASH_PROTO_PROCESS_INFO_PROCESS_ID_ID = 2,
-    
+
     /** CrashReport.process_info.process_path */
     PLCRASH_PROTO_PROCESS_INFO_PROCESS_PATH_ID = 3,
-    
+
     /** CrashReport.process_info.parent_process_name */
     PLCRASH_PROTO_PROCESS_INFO_PARENT_PROCESS_NAME_ID = 4,
-    
+
     /** CrashReport.process_info.parent_process_id */
     PLCRASH_PROTO_PROCESS_INFO_PARENT_PROCESS_ID_ID = 5,
-    
+
     /** CrashReport.process_info.native */
     PLCRASH_PROTO_PROCESS_INFO_NATIVE_ID = 6,
-    
+
     /** CrashReport.process_info.start_time */
     PLCRASH_PROTO_PROCESS_INFO_START_TIME_ID = 7,
 
-    
+
     /** CrashReport.Processor.encoding */
     PLCRASH_PROTO_PROCESSOR_ENCODING_ID = 1,
-    
+
     /** CrashReport.Processor.encoding */
     PLCRASH_PROTO_PROCESSOR_TYPE_ID = 2,
-    
+
     /** CrashReport.Processor.encoding */
     PLCRASH_PROTO_PROCESSOR_SUBTYPE_ID = 3,
 
@@ -245,7 +241,7 @@ enum {
 
     /** CrashReport.report_info */
     PLCRASH_PROTO_REPORT_INFO_ID = 9,
-    
+
     /** CrashReport.report_info.crashed */
     PLCRASH_PROTO_REPORT_INFO_USER_REQUESTED_ID = 1,
 
@@ -279,7 +275,7 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
 {
     /* Default to 0 */
     memset(writer, 0, sizeof(*writer));
-    
+
     /*
      * Try to create our allocator. We've somewhat arbitrarily selected an initial size of 64KB; the heap will grow
      * if we need it to, and physical pages should not actually be allocated until we use the RAM.
@@ -292,7 +288,7 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
         PLCF_DEBUG("Could not initialize our crash-time allocator: %d", err);
         return err;
     }
-    
+
 
     /* Initialize configuration */
     writer->symbol_strategy = symbol_strategy;
@@ -318,7 +314,7 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
             writer->application_info.app_marketing_version = strdup([app_marketing_version UTF8String]);
         }
     }
-    
+
     /* Fetch the process information */
     {
         /* Current process */
@@ -382,7 +378,7 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
         if (writer->machine_info.model == NULL) {
             PLCF_DEBUG("Could not retrive hw.model: %s", strerror(errno));
         }
-        
+
         /* CPU */
         {
             int retval;
@@ -393,7 +389,7 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
             } else {
                 PLCF_DEBUG("Could not retrive hw.cputype: %s", strerror(errno));
             }
-            
+
             if (plcrash_sysctl_int("hw.cpusubtype", &retval)) {
                 writer->machine_info.cpu_subtype = retval;
             } else {
@@ -413,7 +409,7 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
                 PLCF_DEBUG("Could not retrive hw.logicalcpu_max: %s", strerror(errno));
             }
         }
-        
+
         /*
          * Check if the process is emulated. This sysctl is defined in the Universal Binary Programming Guidelines,
          * Second Edition:
@@ -436,15 +432,19 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
         }
     }
 
-    /* Fetch the OS information */    
+    /* Fetch the OS information */
     writer->system_info.build = plcrash_sysctl_string("kern.osversion");
     if (writer->system_info.build == NULL) {
         PLCF_DEBUG("Could not retrive kern.osversion: %s", strerror(errno));
     }
 
 #if TARGET_OS_IPHONE
-    /* iPhone OS */
-    writer->system_info.version = strdup([[[UIDevice currentDevice] systemVersion] UTF8String]);
+    NSOperatingSystemVersion version = [NSProcessInfo processInfo].operatingSystemVersion;
+    NSString *systemVersion = [NSString stringWithFormat:@"%ld.%ld", (long)version.majorVersion, (long)version.minorVersion];
+    if (version.patchVersion > 0)
+        systemVersion = [systemVersion stringByAppendingFormat:@".%ld", (long)version.patchVersion];
+
+    writer->system_info.version = strdup([systemVersion UTF8String]);
 #elif TARGET_OS_MAC
     /* Mac OS X */
     {
@@ -535,20 +535,20 @@ void plcrash_log_writer_free (plcrash_log_writer_t *writer) {
         free(writer->application_info.app_marketing_version);
 
     /* Free the process info */
-    if (writer->process_info.process_name != NULL) 
+    if (writer->process_info.process_name != NULL)
         free(writer->process_info.process_name);
-    if (writer->process_info.process_path != NULL) 
+    if (writer->process_info.process_path != NULL)
         free(writer->process_info.process_path);
-    if (writer->process_info.parent_process_name != NULL) 
+    if (writer->process_info.parent_process_name != NULL)
         free(writer->process_info.parent_process_name);
-    
+
     /* Free the system info */
     if (writer->system_info.version != NULL)
         free(writer->system_info.version);
-    
+
     if (writer->system_info.build != NULL)
         free(writer->system_info.build);
-    
+
     /* Free the machine info */
     if (writer->machine_info.model != NULL)
         free(writer->machine_info.model);
@@ -560,7 +560,7 @@ void plcrash_log_writer_free (plcrash_log_writer_t *writer) {
 
         if (writer->uncaught_exception.reason != NULL)
             free(writer->uncaught_exception.reason);
-        
+
         if (writer->uncaught_exception.callstack != NULL)
             free(writer->uncaught_exception.callstack);
     }
@@ -584,7 +584,7 @@ static size_t plcrash_writer_write_system_info (plcrash_async_file_t *file, plcr
 
     /* OS Version */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SYSTEM_INFO_OS_VERSION_ID, PLPROTOBUF_C_TYPE_STRING, writer->system_info.version);
-    
+
     /* OS Build */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SYSTEM_INFO_OS_BUILD_ID, PLPROTOBUF_C_TYPE_STRING, writer->system_info.build);
 
@@ -610,7 +610,7 @@ static size_t plcrash_writer_write_system_info (plcrash_async_file_t *file, plcr
 static size_t plcrash_writer_write_processor_info (plcrash_async_file_t *file, uint64_t cpu_type, uint64_t cpu_subtype) {
     size_t rv = 0;
     uint32_t enumval;
-    
+
     /* Encoding */
     enumval = PLCrashReportProcessorTypeEncodingMach;
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_PROCESSOR_ENCODING_ID, PLPROTOBUF_C_TYPE_ENUM, &enumval);
@@ -620,7 +620,7 @@ static size_t plcrash_writer_write_processor_info (plcrash_async_file_t *file, u
 
     /* Subtype */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_PROCESSOR_SUBTYPE_ID, PLPROTOBUF_C_TYPE_UINT64, &cpu_subtype);
-    
+
     return rv;
 }
 
@@ -633,7 +633,7 @@ static size_t plcrash_writer_write_processor_info (plcrash_async_file_t *file, u
  */
 static size_t plcrash_writer_write_machine_info (plcrash_async_file_t *file, plcrash_log_writer_t *writer) {
     size_t rv = 0;
-    
+
     /* Model */
     if (writer->machine_info.model != NULL)
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_MACHINE_INFO_MODEL_ID, PLPROTOBUF_C_TYPE_STRING, writer->machine_info.model);
@@ -652,10 +652,10 @@ static size_t plcrash_writer_write_machine_info (plcrash_async_file_t *file, plc
 
     /* Physical Processor Count */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_MACHINE_INFO_PROCESSOR_COUNT_ID, PLPROTOBUF_C_TYPE_UINT32, &writer->machine_info.processor_count);
-    
+
     /* Logical Processor Count */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_MACHINE_INFO_LOGICAL_PROCESSOR_COUNT_ID, PLPROTOBUF_C_TYPE_UINT32, &writer->machine_info.logical_processor_count);
-    
+
     return rv;
 }
 
@@ -674,14 +674,14 @@ static size_t plcrash_writer_write_app_info (plcrash_async_file_t *file, const c
 
     /* App identifier */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_APP_INFO_APP_IDENTIFIER_ID, PLPROTOBUF_C_TYPE_STRING, app_identifier);
-    
+
     /* App version */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_APP_INFO_APP_VERSION_ID, PLPROTOBUF_C_TYPE_STRING, app_version);
-    
+
     /* App marketing version */
     if (app_marketing_version != NULL)
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_APP_INFO_APP_MARKETING_VERSION_ID, PLPROTOBUF_C_TYPE_STRING, app_marketing_version);
-    
+
     return rv;
 }
 
@@ -700,7 +700,7 @@ static size_t plcrash_writer_write_app_info (plcrash_async_file_t *file, const c
  * @param start_time The start time of the process.
  */
 static size_t plcrash_writer_write_process_info (plcrash_async_file_t *file, const char *process_name,
-                                                 const pid_t process_id, const char *process_path, 
+                                                 const pid_t process_id, const char *process_path,
                                                  const char *parent_process_name, const pid_t parent_process_id,
                                                  bool native, time_t start_time)
 {
@@ -729,11 +729,11 @@ static size_t plcrash_writer_write_process_info (plcrash_async_file_t *file, con
     /* Process path */
     if (process_path != NULL)
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_PROCESS_INFO_PROCESS_PATH_ID, PLPROTOBUF_C_TYPE_STRING, process_path);
-    
+
     /* Parent process name */
     if (parent_process_name != NULL)
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_PROCESS_INFO_PARENT_PROCESS_NAME_ID, PLPROTOBUF_C_TYPE_STRING, parent_process_name);
-    
+
 
     /* Parent process ID */
     pidval = parent_process_id;
@@ -741,7 +741,7 @@ static size_t plcrash_writer_write_process_info (plcrash_async_file_t *file, con
 
     /* Native process. */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_PROCESS_INFO_NATIVE_ID, PLPROTOBUF_C_TYPE_BOOL, &native);
-    
+
     /* Start time */
     tval = start_time;
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_PROCESS_INFO_START_TIME_ID, PLPROTOBUF_C_TYPE_UINT64, &tval);
@@ -768,7 +768,7 @@ static size_t plcrash_writer_write_thread_register (plcrash_async_file_t *file, 
     /* Write the value */
     uint64val = regval;
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_THREAD_REGISTER_VALUE_ID, PLPROTOBUF_C_TYPE_UINT64, &uint64val);
-    
+
     return rv;
 }
 
@@ -785,7 +785,7 @@ static size_t plcrash_writer_write_thread_registers (plcrash_async_file_t *file,
     plframe_error_t frame_err;
     uint32_t regCount = plframe_cursor_get_regcount(cursor);
     size_t rv = 0;
-    
+
     /* Write out register messages */
     for (int i = 0; i < regCount; i++) {
         plcrash_greg_t regVal;
@@ -804,12 +804,12 @@ static size_t plcrash_writer_write_thread_registers (plcrash_async_file_t *file,
 
         /* Get the register message size */
         msgsize = plcrash_writer_write_thread_register(NULL, regname, regVal);
-        
+
         /* Write the header and message */
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_THREAD_REGISTERS_ID, PLPROTOBUF_C_TYPE_MESSAGE, &msgsize);
         rv += plcrash_writer_write_thread_register(file, regname, regVal);
     }
-    
+
     return rv;
 }
 
@@ -824,13 +824,13 @@ static size_t plcrash_writer_write_thread_registers (plcrash_async_file_t *file,
  */
 static size_t plcrash_writer_write_symbol (plcrash_async_file_t *file, const char *name, uint64_t start_address) {
     size_t rv = 0;
-    
+
     /* name */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SYMBOL_NAME, PLPROTOBUF_C_TYPE_STRING, name);
-    
+
     /* start_address */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SYMBOL_START_ADDRESS, PLPROTOBUF_C_TYPE_UINT64, &start_address);
-    
+
     return rv;
 }
 
@@ -869,12 +869,12 @@ static size_t plcrash_writer_write_thread_frame (plcrash_async_file_t *file, plc
     size_t rv = 0;
 
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_THREAD_FRAME_PC_ID, PLPROTOBUF_C_TYPE_UINT64, &pcval);
-    
+
     plcrash_async_macho_t *image = plcrash_async_image_containing_address(image_list, (pl_vm_address_t) pcval);
     if (image != NULL && writer->symbol_strategy != PLCRASH_ASYNC_SYMBOL_STRATEGY_NONE) {
         struct pl_symbol_cb_ctx ctx;
         plcrash_error_t ret;
-        
+
         /* Get the symbol message size. If the symbol can not be found, our callback will not be called. If the symbol is found,
          * our callback is called and PLCRASH_ESUCCESS is returned. */
         ctx.file = NULL;
@@ -944,7 +944,7 @@ static size_t plcrash_writer_write_thread (plcrash_async_file_t *file,
     /* Write out the stack frames. */
     {
         /* Set up the frame cursor. */
-        {            
+        {
             /* Use the provided context if available, otherwise initialize a new thread context
              * from the target thread's state. */
             plcrash_async_thread_state_t cursor_thr_state;
@@ -966,7 +966,7 @@ static size_t plcrash_writer_write_thread (plcrash_async_file_t *file,
         uint32_t frame_count = 0;
         while ((ferr = plframe_cursor_next(&cursor)) == PLFRAME_ESUCCESS && frame_count < MAX_THREAD_FRAMES) {
             uint32_t frame_size;
-            
+
             /* On the first frame, dump registers for the crashed thread */
             if (frame_count == 0 && crashed) {
                 rv += plcrash_writer_write_thread_registers(file, task, &cursor);
@@ -981,7 +981,7 @@ static size_t plcrash_writer_write_thread (plcrash_async_file_t *file,
 
             /* Determine the size */
             frame_size = plcrash_writer_write_thread_frame(NULL, writer, pc, image_list, findContext);
-            
+
             rv += plcrash_writer_pack(file, PLCRASH_PROTO_THREAD_FRAMES_ID, PLPROTOBUF_C_TYPE_MESSAGE, &frame_size);
             rv += plcrash_writer_write_thread_frame(file, writer, pc, image_list, findContext);
             frame_count++;
@@ -1019,7 +1019,7 @@ static size_t plcrash_writer_write_binary_image (plcrash_async_file_t *file, plc
     /* Text segment size */
     uint64_t mach_size = image->text_size;
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_BINARY_IMAGE_SIZE_ID, PLPROTOBUF_C_TYPE_UINT64, &mach_size);
-    
+
     /* Base address */
     {
         uintptr_t base_addr;
@@ -1038,13 +1038,13 @@ static size_t plcrash_writer_write_binary_image (plcrash_async_file_t *file, plc
     uuid = plcrash_async_macho_find_command(image, LC_UUID);
     if (uuid != NULL) {
         PLProtobufCBinaryData binary;
-    
+
         /* Write the 128-bit UUID */
         binary.len = sizeof(uuid->uuid);
         binary.data = uuid->uuid;
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_BINARY_IMAGE_UUID_ID, PLPROTOBUF_C_TYPE_BYTES, &binary);
     }
-    
+
     /* Get the processor message size */
     uint32_t msgsize = plcrash_writer_write_processor_info(NULL, cpu_type, cpu_subtype);
 
@@ -1071,15 +1071,15 @@ static size_t plcrash_writer_write_exception (plcrash_async_file_t *file, plcras
     assert(writer->uncaught_exception.has_exception);
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_EXCEPTION_NAME_ID, PLPROTOBUF_C_TYPE_STRING, writer->uncaught_exception.name);
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_EXCEPTION_REASON_ID, PLPROTOBUF_C_TYPE_STRING, writer->uncaught_exception.reason);
-    
+
     /* Write the stack frames, if any */
     uint32_t frame_count = 0;
     for (size_t i = 0; i < writer->uncaught_exception.callstack_count && frame_count < MAX_THREAD_FRAMES; i++) {
         uint64_t pc = (uint64_t)(uintptr_t) writer->uncaught_exception.callstack[i];
-        
+
         /* Determine the size */
         uint32_t frame_size = plcrash_writer_write_thread_frame(NULL, writer, pc, image_list, findContext);
-        
+
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_EXCEPTION_FRAMES_ID, PLPROTOBUF_C_TYPE_MESSAGE, &frame_size);
         rv += plcrash_writer_write_thread_frame(file, writer, pc, image_list, findContext);
         frame_count++;
@@ -1102,7 +1102,7 @@ static size_t plcrash_writer_write_mach_signal (plcrash_async_file_t *file, plcr
     /* Type */
     uint64_t type = siginfo->type;
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SIGNAL_MACH_EXCEPTION_TYPE_ID, PLPROTOBUF_C_TYPE_UINT64, &type);
-    
+
     /* Code(s) */
     for (mach_msg_type_number_t i = 0; i < siginfo->code_count; i++) {
         uint64_t code = siginfo->code[i];
@@ -1122,11 +1122,11 @@ static size_t plcrash_writer_write_mach_signal (plcrash_async_file_t *file, plcr
  */
 static size_t plcrash_writer_write_signal (plcrash_async_file_t *file, plcrash_log_signal_info_t *siginfo) {
     size_t rv = 0;
-    
+
     /* BSD signal info is always required in the current report format; this restriction will be lifted
      * once we switch to the 2.0 format. */
     PLCF_ASSERT(siginfo->bsd_info != NULL);
-    
+
     /* Fetch the signal name */
     char name_buf[10];
     const char *name;
@@ -1144,7 +1144,7 @@ static size_t plcrash_writer_write_signal (plcrash_async_file_t *file, plcrash_l
         snprintf(code_buf, sizeof(code_buf), "#%d", siginfo->bsd_info->code);
         code = code_buf;
     }
-    
+
     /* Address value */
     uint64_t addr = (uintptr_t) siginfo->bsd_info->address;
 
@@ -1152,14 +1152,14 @@ static size_t plcrash_writer_write_signal (plcrash_async_file_t *file, plcrash_l
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SIGNAL_NAME_ID, PLPROTOBUF_C_TYPE_STRING, name);
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SIGNAL_CODE_ID, PLPROTOBUF_C_TYPE_STRING, code);
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_SIGNAL_ADDRESS_ID, PLPROTOBUF_C_TYPE_UINT64, &addr);
-    
+
     /* Mach exception info */
     if (siginfo->mach_info != NULL) {
         uint32_t size;
-        
+
         /* Determine size */
         size = plcrash_writer_write_mach_signal(NULL, siginfo->mach_info);
-        
+
         /* Write message */
         rv += plcrash_writer_pack(file, PLCRASH_PROTO_SIGNAL_MACH_EXCEPTION_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
         rv += plcrash_writer_write_mach_signal(file, siginfo->mach_info);
@@ -1181,10 +1181,10 @@ static size_t plcrash_writer_write_report_info (plcrash_async_file_t *file, plcr
 
     /* Note crashed status */
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_REPORT_INFO_USER_REQUESTED_ID, PLPROTOBUF_C_TYPE_BOOL, &writer->report_info.user_requested);
-    
+
     /* Write the 128-bit UUID */
     PLProtobufCBinaryData uuid_bin;
-    
+
     uuid_bin.len = sizeof(writer->report_info.uuid_bytes);
     uuid_bin.data = &writer->report_info.uuid_bytes;
     rv += plcrash_writer_pack(file, PLCRASH_PROTO_REPORT_INFO_UUID_ID, PLPROTOBUF_C_TYPE_BYTES, &uuid_bin);
@@ -1220,15 +1220,15 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
     /* A context must be supplied if the current thread is marked as the crashed thread; otherwise,
      * the thread's stack can not be safely walked. */
     PLCF_ASSERT(pl_mach_thread_self() != crashed_thread || current_state != NULL);
-    
+
     /* Get a list of all images. If this fails (and it shouldn't), we log the error and instead operate on an empty
      * image list. This will greatly reduce the utility of the report, but it's better than producing no report
      * at all. */
     plcrash_async_image_list_t *image_list;
     if ((err = plcrash_async_dynloader_read_image_list(dynamic_loader, writer->allocator, &image_list)) != PLCRASH_ESUCCESS) {
         PLCF_DEBUG("Fetching image list failed, proceeding with an empty image list: %d", err);
-        
-        
+
+
         /* Allocate an empty image list; outside of a compile-time configuration error, this should never fail. If it does
          * fail, our environment is messed up enough that terminating without writing a report is likely justified */
         if ((image_list = plcrash_async_image_list_new_empty(writer->allocator)) == NULL) {
@@ -1242,7 +1242,7 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
         PLCF_DEBUG("Fetching thread list failed");
         thread_count = 0;
     }
-    
+
     /* Suspend all but the current thread. */
     for (mach_msg_type_number_t i = 0; i < thread_count; i++) {
         if (threads[i] != pl_mach_thread_self())
@@ -1264,15 +1264,15 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
         plcrash_async_file_write(file, PLCRASH_REPORT_FILE_MAGIC, strlen(PLCRASH_REPORT_FILE_MAGIC));
         plcrash_async_file_write(file, &version, sizeof(version));
     }
-    
-    
+
+
     /* Report Info */
     {
         uint32_t size;
-        
+
         /* Determine size */
         size = plcrash_writer_write_report_info(NULL, writer);
-        
+
         /* Write message */
         plcrash_writer_pack(file, PLCRASH_PROTO_REPORT_INFO_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
         plcrash_writer_write_report_info(file, writer);
@@ -1291,12 +1291,12 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
 
         /* Determine size */
         size = plcrash_writer_write_system_info(NULL, writer, timestamp);
-        
+
         /* Write message */
         plcrash_writer_pack(file, PLCRASH_PROTO_SYSTEM_INFO_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
         plcrash_writer_write_system_info(file, writer, timestamp);
     }
-    
+
     /* Machine Info */
     {
         uint32_t size;
@@ -1315,30 +1315,30 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
 
         /* Determine size */
         size = plcrash_writer_write_app_info(NULL, writer->application_info.app_identifier, writer->application_info.app_version, writer->application_info.app_marketing_version);
-        
+
         /* Write message */
         plcrash_writer_pack(file, PLCRASH_PROTO_APP_INFO_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
         plcrash_writer_write_app_info(file, writer->application_info.app_identifier, writer->application_info.app_version, writer->application_info.app_marketing_version);
     }
-    
+
     /* Process info */
     {
         uint32_t size;
-        
+
         /* Determine size */
-        size = plcrash_writer_write_process_info(NULL, writer->process_info.process_name, writer->process_info.process_id, 
+        size = plcrash_writer_write_process_info(NULL, writer->process_info.process_name, writer->process_info.process_id,
                                                  writer->process_info.process_path, writer->process_info.parent_process_name,
                                                  writer->process_info.parent_process_id, writer->process_info.native,
                                                  writer->process_info.start_time);
-        
+
         /* Write message */
         plcrash_writer_pack(file, PLCRASH_PROTO_PROCESS_INFO_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
-        plcrash_writer_write_process_info(file, writer->process_info.process_name, writer->process_info.process_id, 
-                                          writer->process_info.process_path, writer->process_info.parent_process_name, 
+        plcrash_writer_write_process_info(file, writer->process_info.process_name, writer->process_info.process_id,
+                                          writer->process_info.process_path, writer->process_info.parent_process_name,
                                           writer->process_info.parent_process_id, writer->process_info.native,
                                           writer->process_info.start_time);
     }
-    
+
     /* Threads */
     uint32_t thread_number = 0;
     for (mach_msg_type_number_t i = 0; i < thread_count; i++) {
@@ -1352,10 +1352,10 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
             /* Can't log a report for the current thread without a valid context. */
             if (current_state == NULL)
                 continue;
-        
+
             thr_ctx = current_state;
         }
-        
+
         /* Check if this is the crashed thread */
         if (crashed_thread == thread) {
             crashed = true;
@@ -1391,19 +1391,19 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
         plcrash_writer_pack(file, PLCRASH_PROTO_EXCEPTION_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
         plcrash_writer_write_exception(file, writer, image_list, &findContext);
     }
-    
+
     /* Signal */
     {
         uint32_t size;
-        
+
         /* Calculate the message size */
         size = plcrash_writer_write_signal(NULL, siginfo);
         plcrash_writer_pack(file, PLCRASH_PROTO_SIGNAL_ID, PLPROTOBUF_C_TYPE_MESSAGE, &size);
         plcrash_writer_write_signal(file, siginfo);
     }
-    
+
     plcrash_async_symbol_cache_free(&findContext);
-    
+
     /* Clean up the thread array */
     for (mach_msg_type_number_t i = 0; i < thread_count; i++) {
         if (threads[i] != pl_mach_thread_self())
@@ -1413,7 +1413,7 @@ plcrash_error_t plcrash_log_writer_write (plcrash_log_writer_t *writer,
     }
 
     vm_deallocate(mach_task_self(), (vm_address_t)threads, sizeof(thread_t) * thread_count);
-    
+
     return PLCRASH_ESUCCESS;
 }
 
